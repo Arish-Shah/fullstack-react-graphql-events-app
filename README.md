@@ -1,0 +1,1 @@
+# fullstack-react-graphql-events-app
