@@ -1,9 +1,28 @@
 const { buildSchema } = require("graphql");
 
 module.exports = buildSchema(`
-  type RootQuery {}
+  type Event {
+    _id: ID!
+    title: String!
+    description: String!
+    price: Float!
+    date: String!
+  }
 
-  type RootMutation {}
+  input EventInput {
+    title: String!
+    description: String!
+    price: Float!
+    date: String!
+  }
+
+  type RootQuery {
+    events: [Event!]!
+  }
+
+  type RootMutation {
+    createEvent(eventInput: EventInput): Event
+  }
 
   schema {
     query: RootQuery

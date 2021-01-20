@@ -1,5 +1,6 @@
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
 const schema = require("./schema");
@@ -18,4 +19,14 @@ app.use(
   })
 );
 
-app.listen(process.env.PORT || 8080);
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    app.listen(process.env.PORT || 8080, () => console.log("Server started"));
+  })
+  .catch(err => {
+    console.log(err);
+  });
