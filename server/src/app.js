@@ -3,8 +3,8 @@ const { graphqlHTTP } = require("express-graphql");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const schema = require("./schema");
-const resolver = require("./resolver");
+const schema = require("./graphql/schema");
+const resolvers = require("./graphql/resolvers");
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(
   graphqlHTTP({
     graphiql: true,
     schema,
-    rootValue: resolver
+    rootValue: resolvers
   })
 );
 
