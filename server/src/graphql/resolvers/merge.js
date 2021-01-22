@@ -4,24 +4,16 @@ const User = require("../../models/user");
 const { dateToString } = require("../../helpers/date");
 
 const user = async id => {
-  try {
-    const user = await User.findById(id);
-    return {
-      ...user._doc,
-      createdEvents: events.bind(this, user._doc.createdEvents)
-    };
-  } catch (error) {
-    throw error;
-  }
+  const user = await User.findById(id);
+  return {
+    ...user._doc,
+    createdEvents: events.bind(this, user._doc.createdEvents)
+  };
 };
 
 const events = async ids => {
-  try {
-    const events = await Event.find({ _id: { $in: ids } });
-    return events.map(event => transformEvent(event));
-  } catch (error) {
-    throw error;
-  }
+  const events = await Event.find({ _id: { $in: ids } });
+  return events.map(event => transformEvent(event));
 };
 
 const event = async id => {

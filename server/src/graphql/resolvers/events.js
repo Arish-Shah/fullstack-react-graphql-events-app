@@ -21,14 +21,10 @@ module.exports = {
       date: new Date(date),
       creator: "60086ed3789d5227b8a7bcfa"
     });
-    try {
-      const result = await event.save();
-      const user = await User.findById("60086ed3789d5227b8a7bcfa");
-      user.createdEvents.push(event);
-      await user.save();
-      return transformEvent(result);
-    } catch (error) {
-      throw error;
-    }
+    const result = await event.save();
+    const user = await User.findById("60086ed3789d5227b8a7bcfa");
+    user.createdEvents.push(event);
+    await user.save();
+    return transformEvent(result);
   }
 };

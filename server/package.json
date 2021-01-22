@@ -16,9 +16,11 @@
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.4.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.13"
   },
   "devDependencies": {
+    "eslint": "^7.18.0",
     "nodemon": "^2.0.7"
   }
 }
