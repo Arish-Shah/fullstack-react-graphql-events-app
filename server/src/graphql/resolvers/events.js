@@ -12,17 +12,21 @@ module.exports = {
       console.log(error);
     }
   },
-  createEvent: async ({ eventInput }) => {
+  createEvent: async ({ eventInput }, req) => {
+    if (!req.isAuth) {
+      throw new Error("Unauthenticated");
+    }
+
     const { title, description, price, date } = eventInput;
     const event = new Event({
       title: title,
       description: description,
       price: price,
       date: new Date(date),
-      creator: "60086ed3789d5227b8a7bcfa"
+      creator: req.userId
     });
     const result = await event.save();
-    const user = await User.findById("60086ed3789d5227b8a7bcfa");
+    const user = await User.findById(req.userId);
     user.createdEvents.push(event);
     await user.save();
     return transformEvent(result);

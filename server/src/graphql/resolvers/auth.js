@@ -37,7 +37,7 @@ module.exports = {
         userId: user._id,
         email: user.email
       },
-      "secret",
+      process.env.JWT_SECRET,
       {
         expiresIn: "1h"
       }
