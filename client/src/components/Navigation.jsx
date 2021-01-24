@@ -1,32 +1,26 @@
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import styles from "../styles/Navigation.module.css";
+import AuthContext from "../context/AuthContext";
 
 function Navigation() {
+  const authContext = useContext(AuthContext);
+
   return (
-    <header className={styles.container}>
+    <nav>
       <div>
-        <h1 className={styles.logo}>Events</h1>
+        <NavLink to="/">Event</NavLink>
+        <div>
+          {!authContext.token && <NavLink to="/auth">Authentication</NavLink>}
+          <NavLink to="/events">Events</NavLink>
+          {authContext.token && <NavLink to="/bookings">Bookings</NavLink>}
+        </div>
       </div>
-      <nav>
-        <ul className={styles.links}>
-          <li>
-            <NavLink activeClassName={styles.active} to="/auth">
-              Authenticate
-            </NavLink>
-          </li>
-          <li>
-            <NavLink activeClassName={styles.active} to="/events">
-              Events
-            </NavLink>
-          </li>
-          <li>
-            <NavLink activeClassName={styles.active} to="/bookings">
-              Bookings
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
-    </header>
+      <div>
+        {authContext.token && (
+          <button onClick={authContext.logout}>Log out</button>
+        )}
+      </div>
+    </nav>
   );
 }
 

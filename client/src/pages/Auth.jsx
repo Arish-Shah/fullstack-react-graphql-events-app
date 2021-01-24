@@ -1,9 +1,11 @@
-import { useRef, useState } from "react";
-import styles from "../styles/Auth.module.css";
+import { useContext, useRef, useState } from "react";
+import AuthContext from "../context/AuthContext";
 import http from "../util/http";
 
 function AuthPage() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
+
+  const authContext = useContext(AuthContext);
 
   const emailEl = useRef();
   const passwordEl = useRef();
@@ -39,24 +41,30 @@ function AuthPage() {
     }
 
     const response = await http(QUERY);
-    console.log(response);
+    if (response.data.login.token) {
+      authContext.login(
+        response.data.login.token,
+        response.data.login.userId,
+        response.data.login.expiresIn
+      );
+    }
   };
 
   const switchMode = () => setIsLogin(state => !state);
 
   return (
-    <form className={styles.container} onSubmit={handleSubmit}>
-      <div className={styles.formControl}>
+    <form onSubmit={handleSubmit}>
+      <div>
         <label htmlFor="email">Email</label>
         <input type="email" id="email" ref={emailEl} />
       </div>
-      <div className={styles.formControl}>
+      <div>
         <label htmlFor="password">Password</label>
         <input type="password" id="password" ref={passwordEl} />
       </div>
-      <div className={styles.formAction}>
+      <div>
         <button type="submit">{isLogin ? "Log in" : "Sign up"}</button>
-        <button type="button" className={styles.switchBtn} onClick={switchMode}>
+        <button type="button" onClick={switchMode}>
           Switch to {isLogin ? "Sign up" : "Log in"}
         </button>
       </div>

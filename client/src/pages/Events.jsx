@@ -1,8 +1,8 @@
 function EventsPage() {
   return (
-    <main>
-      <h1>Events Page</h1>
-    </main>
+    <div>
+      <h6>Share your own Events!</h6>
+    </div>
   );
 }
 
