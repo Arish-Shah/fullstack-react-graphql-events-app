@@ -54,15 +54,15 @@ function AuthPage() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      <div className="form-group">
         <label htmlFor="email">Email</label>
         <input type="email" id="email" ref={emailEl} />
       </div>
-      <div>
+      <div className="form-group">
         <label htmlFor="password">Password</label>
         <input type="password" id="password" ref={passwordEl} />
       </div>
-      <div>
+      <div className="form-group">
         <button type="submit">{isLogin ? "Log in" : "Sign up"}</button>
         <button type="button" onClick={switchMode}>
           Switch to {isLogin ? "Sign up" : "Log in"}
