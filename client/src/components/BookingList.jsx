@@ -1,6 +1,6 @@
 function BookingList({ bookings, onDelete }) {
   return (
-    <ul className="list-style-none">
+    <ul className="list-style-none p-0">
       {bookings.map(({ _id, event, createdAt }) => (
         <li
           key={_id}

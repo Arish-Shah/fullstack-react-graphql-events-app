@@ -18,11 +18,12 @@ function AuthPage() {
     if (email.length === 0 || password.length === 0) return;
 
     let QUERY;
+    let VARIABLES = { email, password };
 
     if (isLogin) {
       QUERY = `
-        query {
-          login(email: "${email}", password: "${password}") {
+        query Login($email: String!, $password: String!) {
+          login(email: $email, password: $password) {
             userId
             token
             expiresIn
@@ -31,8 +32,8 @@ function AuthPage() {
       `;
     } else {
       QUERY = `
-        mutation {
-          createUser(userInput: { email: "${email}", password: "${password}" }) {
+        mutation CreateUser($email: String!, $password: String!) {
+          createUser(userInput: { email: $email, password: $password }) {
             _id
             email
           }
@@ -40,13 +41,17 @@ function AuthPage() {
       `;
     }
 
-    const response = await http(QUERY);
-    if (response.data.login.token) {
-      authContext.login(
-        response.data.login.token,
-        response.data.login.userId,
-        response.data.login.expiresIn
-      );
+    try {
+      const response = await http(QUERY, null, VARIABLES);
+      if (response.data.login.token) {
+        authContext.login(
+          response.data.login.token,
+          response.data.login.userId,
+          response.data.login.expiresIn
+        );
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 

@@ -1,8 +1,9 @@
 const URL = "http://localhost:8080/graphql";
 
-const http = async (QUERY, headers = {}) => {
+const http = async (QUERY, headers = {}, variables = {}) => {
   const body = {
-    query: QUERY
+    query: QUERY,
+    variables
   };
 
   try {

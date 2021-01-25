@@ -12,6 +12,7 @@ function BookingsPage() {
 
   useEffect(() => {
     fetchBookings();
+    // eslint-disable-next-line
   }, []);
 
   const fetchBookings = async () => {
@@ -45,18 +46,24 @@ function BookingsPage() {
 
   const handleBookingDelete = async id => {
     const QUERY = `
-      mutation {
-        cancelBooking(id: "${id}") {
+      mutation cancelBooking($id: ID!) {
+        cancelBooking(id: $id) {
           _id
           title
         }
       }
     `;
 
+    const VARIABLES = { id };
+
     try {
-      await http(QUERY, {
-        Authorization: "Bearer " + authContext.token
-      });
+      await http(
+        QUERY,
+        {
+          Authorization: "Bearer " + authContext.token
+        },
+        VARIABLES
+      );
       setBookings(bookings => bookings.filter(b => b._id !== id));
     } catch (error) {
       console.log(error);

@@ -45,8 +45,8 @@ function EventsPage() {
       return;
 
     const QUERY = `
-      mutation {
-        createEvent(eventInput: { title: "${title}", description: "${description}", price: ${price}, date: "${date}" }) {
+      mutation CreateEvent($title: String!, $description: String!, $price: Float!, $date: String!) {
+        createEvent(eventInput: { title: $title, description: $description, price: $price, date: $date }) {
           _id
           title
           description
@@ -55,10 +55,15 @@ function EventsPage() {
         }
       }
     `;
+    const VARIABLES = { title, description, price, date };
 
-    const response = await http(QUERY, {
-      Authorization: `Bearer ${authContext.token}`
-    });
+    const response = await http(
+      QUERY,
+      {
+        Authorization: `Bearer ${authContext.token}`
+      },
+      VARIABLES
+    );
 
     setEvents(events => {
       const {
@@ -132,18 +137,24 @@ function EventsPage() {
       return;
     }
     const QUERY = `
-      mutation {
-        bookEvent(id: "${selectedEvent._id}") {
+      mutation BookEvent($id: ID!) {
+        bookEvent(id: $id) {
           _id
           createdAt
         }
       }
     `;
 
+    const VARIABLES = { id: selectedEvent._id };
+
     try {
-      await http(QUERY, {
-        Authorization: "Bearer " + authContext.token
-      });
+      await http(
+        QUERY,
+        {
+          Authorization: "Bearer " + authContext.token
+        },
+        VARIABLES
+      );
     } catch (error) {
       console.log(error);
     } finally {
