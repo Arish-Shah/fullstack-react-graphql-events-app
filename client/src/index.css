@@ -13,6 +13,10 @@ input {
   width: 100%;
 }
 
+button.active {
+  background: var(--button-hover);
+}
+
 .p-0 {
   padding: 0;
 }
@@ -39,6 +43,10 @@ input {
 
 .mt-3 {
   margin-top: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
 }
 
 .mb-2 {
