@@ -43,8 +43,6 @@ function BookingsChart({ bookings }) {
     values[values.length - 1] = 0;
   }
 
-  console.log(chartData);
-
   return (
     <div className="mt-4">
       <BarChart data={chartData} />

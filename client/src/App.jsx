@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
 import AuthContext from "./context/AuthContext";
@@ -15,6 +15,19 @@ function App() {
     userId: null
   });
 
+  useEffect(() => {
+    const auth = JSON.parse(localStorage.getItem("auth"));
+    if (auth?.token && auth?.userId) {
+      setAuth(auth);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (auth.userId && auth.token) {
+      localStorage.setItem("auth", JSON.stringify(auth));
+    }
+  }, [auth]);
+
   const login = (token, userId, expiresIn) => {
     setAuth({
       token,
@@ -27,6 +40,7 @@ function App() {
       token: null,
       userId: null
     });
+    localStorage.clear();
   };
 
   return (
