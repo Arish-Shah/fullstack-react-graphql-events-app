@@ -16,6 +16,7 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
+  me?: Maybe<User>;
   events: Array<Event>;
   bookings: Array<Booking>;
 };
@@ -24,6 +25,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   signup?: Maybe<User>;
   login?: Maybe<User>;
+  logout: Scalars['Boolean'];
   createEvent: Event;
   bookEvent: Booking;
   cancelBooking: Event;
@@ -60,6 +62,7 @@ export type User = {
   id: Scalars['ID'];
   email: Scalars['String'];
   createdEvents: Array<Event>;
+  createdAt: Scalars['Date'];
 };
 
 export type Event = {
@@ -70,6 +73,7 @@ export type Event = {
   price: Scalars['Float'];
   date: Scalars['Date'];
   creator: User;
+  createdAt: Scalars['Date'];
 };
 
 export type Booking = {
@@ -77,8 +81,7 @@ export type Booking = {
   id: Scalars['ID'];
   event: Event;
   user: User;
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
+  createdAt: Scalars['Date'];
 };
 
 export type UserInput = {
@@ -175,6 +178,7 @@ export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
   Mutation: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   User: ResolverTypeWrapper<User>;
   Event: ResolverTypeWrapper<Event>;
@@ -183,7 +187,6 @@ export type ResolversTypes = {
   UserInput: UserInput;
   EventInput: EventInput;
   Date: ResolverTypeWrapper<Scalars['Date']>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -191,6 +194,7 @@ export type ResolversParentTypes = {
   Query: {};
   Mutation: {};
   String: Scalars['String'];
+  Boolean: Scalars['Boolean'];
   ID: Scalars['ID'];
   User: User;
   Event: Event;
@@ -199,10 +203,10 @@ export type ResolversParentTypes = {
   UserInput: UserInput;
   EventInput: EventInput;
   Date: Scalars['Date'];
-  Boolean: Scalars['Boolean'];
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   events?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
   bookings?: Resolver<Array<ResolversTypes['Booking']>, ParentType, ContextType>;
 };
@@ -210,6 +214,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   signup?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationSignupArgs, never>>;
   login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
+  logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   createEvent?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationCreateEventArgs, never>>;
   bookEvent?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationBookEventArgs, 'id'>>;
   cancelBooking?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationCancelBookingArgs, 'id'>>;
@@ -219,6 +224,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdEvents?: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -229,6 +235,7 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -236,8 +243,7 @@ export type BookingResolvers<ContextType = any, ParentType extends ResolversPare
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   event?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

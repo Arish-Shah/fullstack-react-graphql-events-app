@@ -5,4 +5,5 @@ export interface MyContext {
   req: NextApiRequest;
   res: NextApiResponse;
   prisma: PrismaClient;
+  userId: string | null;
 }

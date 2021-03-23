@@ -1,10 +1,18 @@
+import { ApolloError } from "apollo-server-micro";
 import cookie from "cookie";
 import bcrypt from "bcryptjs";
 
 import { Resolvers } from "~/types/backend";
 import { MyContext } from "~/types/context";
+import { createToken } from "~/util/token";
 
 export const UserResolver: Resolvers<MyContext> = {
+  Query: {
+    me: async (_, __, { prisma, userId: id }) => {
+      const user = await prisma.user.findUnique({ where: { id } });
+      return user as any;
+    },
+  },
   Mutation: {
     signup: async (_, { input }, { res, prisma }) => {
       const hashedPassword = await bcrypt.hash(input.password, 12);
@@ -16,14 +24,60 @@ export const UserResolver: Resolvers<MyContext> = {
         },
       });
 
+      const token = createToken({
+        userId: user.id,
+      });
+
       res.setHeader(
         "Set-Cookie",
-        cookie.serialize("foo", "this, is some value", {
+        cookie.serialize(process.env.COOKIE_NAME, token, {
           httpOnly: true,
+          path: "/",
+          secure: process.env.NODE_ENV === "production",
+          maxAge: 60 * 60 * 6,
         })
       );
 
       return user as any;
+    },
+    login: async (_, { email, password }, { req, res, prisma }) => {
+      const user = await prisma.user.findFirst({ where: { email } });
+      if (!user) {
+        throw new ApolloError("user not found");
+      }
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) {
+        throw new ApolloError("incorrect password");
+      }
+
+      const token = createToken({
+        userId: user.id,
+      });
+
+      res.setHeader(
+        "Set-Cookie",
+        cookie.serialize(process.env.COOKIE_NAME, token, {
+          httpOnly: true,
+          path: "/",
+          secure: process.env.NODE_ENV === "production",
+          maxAge: 60 * 60 * 6,
+        })
+      );
+
+      return user as any;
+    },
+    logout: (_, __, { res, userId }) => {
+      if (userId) {
+        res.setHeader(
+          "Set-Cookie",
+          cookie.serialize(process.env.COOKIE_NAME, "", {
+            maxAge: -1,
+            path: "/",
+          })
+        );
+        return true;
+      }
+      return false;
     },
   },
 };

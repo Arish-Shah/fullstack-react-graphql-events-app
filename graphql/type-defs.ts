@@ -2,6 +2,7 @@ import { gql } from "apollo-server-core";
 
 export const typeDefs = gql`
   type Query {
+    me: User
     events: [Event!]!
     bookings: [Booking!]!
   }
@@ -9,6 +10,7 @@ export const typeDefs = gql`
   type Mutation {
     signup(input: UserInput): User
     login(email: String!, password: String!): User
+    logout: Boolean!
     createEvent(input: EventInput): Event!
     bookEvent(id: ID!): Booking!
     cancelBooking(id: ID!): Event!
