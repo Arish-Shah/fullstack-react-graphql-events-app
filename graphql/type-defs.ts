@@ -18,6 +18,7 @@ export const typeDefs = gql`
     id: ID!
     email: String!
     createdEvents: [Event!]!
+    createdAt: Date!
   }
 
   type Event {
@@ -27,14 +28,14 @@ export const typeDefs = gql`
     price: Float!
     date: Date!
     creator: User!
+    createdAt: Date!
   }
 
   type Booking {
     id: ID!
     event: Event!
     user: User!
-    createdAt: String!
-    updatedAt: String!
+    createdAt: Date!
   }
 
   input UserInput {
