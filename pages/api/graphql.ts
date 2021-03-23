@@ -7,12 +7,17 @@ import { readToken } from "~/util/token";
 
 const prisma = new PrismaClient();
 
+interface ContextArgs {
+  req: NextApiRequest;
+  res: NextApiResponse;
+}
+
 const server = new ApolloServer({
   schema,
-  context: ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
+  context: ({ req, res }: ContextArgs) => {
     const { userId } = readToken(req.cookies[process.env.COOKIE_NAME] || "");
+
     return {
-      req,
       res,
       prisma,
       userId,

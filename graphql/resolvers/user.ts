@@ -1,12 +1,17 @@
-import { ApolloError } from "apollo-server-micro";
+import { ApolloError, UserInputError } from "apollo-server-micro";
 import cookie from "cookie";
 import bcrypt from "bcryptjs";
 
 import { Resolvers } from "~/types/backend";
 import { MyContext } from "~/types/context";
 import { createToken } from "~/util/token";
+import { signupValidator } from "~/util/validators";
 
 export const UserResolver: Resolvers<MyContext> = {
+  User: {
+    createdEvents: (parent, _, { prisma }) =>
+      prisma.event.findMany({ where: { creatorId: parent.id } }) as any,
+  },
   Query: {
     me: async (_, __, { prisma, userId: id }) => {
       const user = await prisma.user.findUnique({ where: { id } });
@@ -15,6 +20,10 @@ export const UserResolver: Resolvers<MyContext> = {
   },
   Mutation: {
     signup: async (_, { input }, { res, prisma }) => {
+      if (signupValidator(input)) {
+        throw new UserInputError("invalid input");
+      }
+
       const hashedPassword = await bcrypt.hash(input.password, 12);
 
       const user = await prisma.user.create({
@@ -40,7 +49,7 @@ export const UserResolver: Resolvers<MyContext> = {
 
       return user as any;
     },
-    login: async (_, { email, password }, { req, res, prisma }) => {
+    login: async (_, { email, password }, { res, prisma }) => {
       const user = await prisma.user.findFirst({ where: { email } });
       if (!user) {
         throw new ApolloError("user not found");

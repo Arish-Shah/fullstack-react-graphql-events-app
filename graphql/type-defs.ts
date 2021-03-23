@@ -1,4 +1,4 @@
-import { gql } from "apollo-server-core";
+import { gql } from "apollo-server-micro";
 
 export const typeDefs = gql`
   type Query {
@@ -12,8 +12,8 @@ export const typeDefs = gql`
     login(email: String!, password: String!): User
     logout: Boolean!
     createEvent(input: EventInput): Event!
-    bookEvent(id: ID!): Booking!
-    cancelBooking(id: ID!): Event!
+    bookEvent(eventId: ID!): Booking!
+    cancelBooking(bookingId: ID!): Boolean!
   }
 
   type User {
@@ -30,13 +30,16 @@ export const typeDefs = gql`
     price: Float!
     date: Date!
     creator: User!
+    creatorId: ID!
     createdAt: Date!
   }
 
   type Booking {
     id: ID!
     event: Event!
+    eventId: ID!
     user: User!
+    userId: ID!
     createdAt: Date!
   }
 

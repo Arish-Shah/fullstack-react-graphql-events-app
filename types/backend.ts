@@ -28,7 +28,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   createEvent: Event;
   bookEvent: Booking;
-  cancelBooking: Event;
+  cancelBooking: Scalars['Boolean'];
 };
 
 
@@ -49,12 +49,12 @@ export type MutationCreateEventArgs = {
 
 
 export type MutationBookEventArgs = {
-  id: Scalars['ID'];
+  eventId: Scalars['ID'];
 };
 
 
 export type MutationCancelBookingArgs = {
-  id: Scalars['ID'];
+  bookingId: Scalars['ID'];
 };
 
 export type User = {
@@ -73,6 +73,7 @@ export type Event = {
   price: Scalars['Float'];
   date: Scalars['Date'];
   creator: User;
+  creatorId: Scalars['ID'];
   createdAt: Scalars['Date'];
 };
 
@@ -80,7 +81,9 @@ export type Booking = {
   __typename?: 'Booking';
   id: Scalars['ID'];
   event: Event;
+  eventId: Scalars['ID'];
   user: User;
+  userId: Scalars['ID'];
   createdAt: Scalars['Date'];
 };
 
@@ -216,8 +219,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   logout?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   createEvent?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationCreateEventArgs, never>>;
-  bookEvent?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationBookEventArgs, 'id'>>;
-  cancelBooking?: Resolver<ResolversTypes['Event'], ParentType, ContextType, RequireFields<MutationCancelBookingArgs, 'id'>>;
+  bookEvent?: Resolver<ResolversTypes['Booking'], ParentType, ContextType, RequireFields<MutationBookEventArgs, 'eventId'>>;
+  cancelBooking?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationCancelBookingArgs, 'bookingId'>>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -235,6 +238,7 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
   price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   creator?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  creatorId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -242,7 +246,9 @@ export type EventResolvers<ContextType = any, ParentType extends ResolversParent
 export type BookingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Booking'] = ResolversParentTypes['Booking']> = {
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   event?: Resolver<ResolversTypes['Event'], ParentType, ContextType>;
+  eventId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
