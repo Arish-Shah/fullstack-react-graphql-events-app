@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { ApolloServer } from "apollo-server-micro";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { schema } from "~/graphql/schema";
+import { schema } from "~/apollo/schema";
 import { readToken } from "~/util/token";
 
 const prisma = new PrismaClient();
