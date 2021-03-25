@@ -1,1 +1,1 @@
-# React GraphQL Events App
+# fullstack-react-graphql-events-app

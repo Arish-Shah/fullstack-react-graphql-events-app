@@ -1,8 +1,0 @@
-fragment RegularUser on User {
-  id
-  email
-  createdAt
-  createdEvents {
-    ...RegularEvent
-  }
-}

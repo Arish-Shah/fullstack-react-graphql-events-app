@@ -1,5 +1,0 @@
-mutation BookEvent($eventId: ID!) {
-  bookEvent(eventId: $eventId) {
-    id
-  }
-}
