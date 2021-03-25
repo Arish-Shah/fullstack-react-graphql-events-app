@@ -2,8 +2,8 @@ import { Button } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
-import { Skeleton } from "@chakra-ui/skeleton";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 import {
@@ -15,7 +15,15 @@ import {
 
 const Navbar = () => {
   const { data, loading } = useMeQuery();
+
+  const router = useRouter();
+
   const [logout] = useLogoutMutation({
+    onCompleted(data) {
+      if (data.logout) {
+        router.push("/login");
+      }
+    },
     update(cache, { data }) {
       if (data.logout) {
         cache.writeQuery<MeQuery>({

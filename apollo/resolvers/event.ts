@@ -14,7 +14,8 @@ export const EventResolver: Resolvers<MyContext> = {
     },
   },
   Query: {
-    events: (_, __, { prisma }) => prisma.event.findMany() as any,
+    events: (_, __, { prisma }) =>
+      prisma.event.findMany({ orderBy: { createdAt: "desc" } }) as any,
   },
   Mutation: {
     createEvent: async (_, { input }, { prisma, userId: creatorId }) => {

@@ -1,17 +1,20 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Textarea } from "@chakra-ui/react";
 
 interface InputFieldProps {
   placeholder: string;
-  type: "text" | "email" | "password";
-  value: string;
+  type?: "text" | "email" | "password" | "number" | "date";
+  value: any;
   onChange: (e: any) => void;
+  textarea?;
 }
 
 const InputField: React.FC<InputFieldProps> = (props) => {
+  const I = props.textarea ? Textarea : Input;
+
   return (
     <FormControl mb="4">
       <FormLabel>{props.children}</FormLabel>
-      <Input
+      <I
         placeholder={props.placeholder}
         id={props.placeholder}
         value={props.value}

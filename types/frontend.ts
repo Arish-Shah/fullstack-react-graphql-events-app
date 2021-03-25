@@ -101,9 +101,48 @@ export type EventInput = {
 };
 
 
+export type RegularEventFragment = (
+  { __typename?: 'Event' }
+  & Pick<Event, 'id' | 'title' | 'price' | 'date' | 'description' | 'createdAt'>
+  & { creator: (
+    { __typename?: 'User' }
+    & Pick<User, 'email'>
+  ) }
+);
+
 export type RegularUserFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'email' | 'createdAt'>
+  & { createdEvents: Array<(
+    { __typename?: 'Event' }
+    & RegularEventFragment
+  )> }
+);
+
+export type BookEventMutationVariables = Exact<{
+  eventId: Scalars['ID'];
+}>;
+
+
+export type BookEventMutation = (
+  { __typename?: 'Mutation' }
+  & { bookEvent: (
+    { __typename?: 'Booking' }
+    & Pick<Booking, 'id'>
+  ) }
+);
+
+export type CreateEventMutationVariables = Exact<{
+  input: EventInput;
+}>;
+
+
+export type CreateEventMutation = (
+  { __typename?: 'Mutation' }
+  & { createEvent: (
+    { __typename?: 'Event' }
+    & RegularEventFragment
+  ) }
 );
 
 export type LoginMutationVariables = Exact<{
@@ -141,6 +180,32 @@ export type SignupMutation = (
   )> }
 );
 
+export type BookingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BookingsQuery = (
+  { __typename?: 'Query' }
+  & { bookings: Array<(
+    { __typename?: 'Booking' }
+    & Pick<Booking, 'id'>
+    & { event: (
+      { __typename?: 'Event' }
+      & RegularEventFragment
+    ) }
+  )> }
+);
+
+export type EventsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EventsQuery = (
+  { __typename?: 'Query' }
+  & { events: Array<(
+    { __typename?: 'Event' }
+    & RegularEventFragment
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -152,13 +217,95 @@ export type MeQuery = (
   )> }
 );
 
+export const RegularEventFragmentDoc = gql`
+    fragment RegularEvent on Event {
+  id
+  title
+  price
+  date
+  description
+  createdAt
+  creator {
+    email
+  }
+}
+    `;
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
   id
   email
   createdAt
+  createdEvents {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+export const BookEventDocument = gql`
+    mutation BookEvent($eventId: ID!) {
+  bookEvent(eventId: $eventId) {
+    id
+  }
 }
     `;
+export type BookEventMutationFn = Apollo.MutationFunction<BookEventMutation, BookEventMutationVariables>;
+
+/**
+ * __useBookEventMutation__
+ *
+ * To run a mutation, you first call `useBookEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useBookEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [bookEventMutation, { data, loading, error }] = useBookEventMutation({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useBookEventMutation(baseOptions?: Apollo.MutationHookOptions<BookEventMutation, BookEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<BookEventMutation, BookEventMutationVariables>(BookEventDocument, options);
+      }
+export type BookEventMutationHookResult = ReturnType<typeof useBookEventMutation>;
+export type BookEventMutationResult = Apollo.MutationResult<BookEventMutation>;
+export type BookEventMutationOptions = Apollo.BaseMutationOptions<BookEventMutation, BookEventMutationVariables>;
+export const CreateEventDocument = gql`
+    mutation CreateEvent($input: EventInput!) {
+  createEvent(input: $input) {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
+
+/**
+ * __useCreateEventMutation__
+ *
+ * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, options);
+      }
+export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
+export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
+export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -256,6 +403,77 @@ export function useSignupMutation(baseOptions?: Apollo.MutationHookOptions<Signu
 export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>;
 export type SignupMutationResult = Apollo.MutationResult<SignupMutation>;
 export type SignupMutationOptions = Apollo.BaseMutationOptions<SignupMutation, SignupMutationVariables>;
+export const BookingsDocument = gql`
+    query Bookings {
+  bookings {
+    id
+    event {
+      ...RegularEvent
+    }
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+/**
+ * __useBookingsQuery__
+ *
+ * To run a query within a React component, call `useBookingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBookingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBookingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBookingsQuery(baseOptions?: Apollo.QueryHookOptions<BookingsQuery, BookingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BookingsQuery, BookingsQueryVariables>(BookingsDocument, options);
+      }
+export function useBookingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BookingsQuery, BookingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BookingsQuery, BookingsQueryVariables>(BookingsDocument, options);
+        }
+export type BookingsQueryHookResult = ReturnType<typeof useBookingsQuery>;
+export type BookingsLazyQueryHookResult = ReturnType<typeof useBookingsLazyQuery>;
+export type BookingsQueryResult = Apollo.QueryResult<BookingsQuery, BookingsQueryVariables>;
+export const EventsDocument = gql`
+    query Events {
+  events {
+    ...RegularEvent
+  }
+}
+    ${RegularEventFragmentDoc}`;
+
+/**
+ * __useEventsQuery__
+ *
+ * To run a query within a React component, call `useEventsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEventsQuery(baseOptions?: Apollo.QueryHookOptions<EventsQuery, EventsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<EventsQuery, EventsQueryVariables>(EventsDocument, options);
+      }
+export function useEventsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventsQuery, EventsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<EventsQuery, EventsQueryVariables>(EventsDocument, options);
+        }
+export type EventsQueryHookResult = ReturnType<typeof useEventsQuery>;
+export type EventsLazyQueryHookResult = ReturnType<typeof useEventsLazyQuery>;
+export type EventsQueryResult = Apollo.QueryResult<EventsQuery, EventsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

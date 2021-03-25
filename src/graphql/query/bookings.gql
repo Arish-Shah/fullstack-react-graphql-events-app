@@ -1,0 +1,8 @@
+query Bookings {
+  bookings {
+    id
+    event {
+      ...RegularEvent
+    }
+  }
+}

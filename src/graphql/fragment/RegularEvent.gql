@@ -1,0 +1,11 @@
+fragment RegularEvent on Event {
+  id
+  title
+  price
+  date
+  description
+  createdAt
+  creator {
+    email
+  }
+}

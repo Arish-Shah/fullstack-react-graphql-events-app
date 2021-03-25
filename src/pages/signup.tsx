@@ -19,7 +19,8 @@ const Login = () => {
     errorPolicy: "all",
     onCompleted(data) {
       if (data.signup) {
-        router.push("/home");
+        if (router.query.next) router.push(router.query.next as string);
+        else router.push("/home");
       }
     },
     update(cache, { data }) {
